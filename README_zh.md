@@ -30,7 +30,7 @@ class Module extends AbstractModule {
 
 ```
 
-### 代码使用(这段代码修改自[play-anorm](https://github.com/playframework/play-scala-anorm-example.git))
+### 代码使用(这段代码修改自[play-anorm](https://github.com/playframework/play-scala-anorm-example))
 ```scala
 import java.sql.Connection
 import javax.inject._
@@ -57,7 +57,7 @@ class CompanyService @Inject() (transactional: Transactional[Connection]/*注入
   }
 
   /**
-   * 按照Module.scala中配置的属性执行事务操作, `transactional` 对象的使用方法与Spring的@Transactional注解一致
+   * 按照Module.scala中配置的属性执行事务操作, ` transactional ` 对象的使用方法与Spring的 ` @Transactional ` 注解一致
    */
   def options: Seq[(String,String)] = transactional() { implicit connection =>
     SQL("select * from company order by name").as(simple *).
@@ -67,8 +67,8 @@ class CompanyService @Inject() (transactional: Transactional[Connection]/*注入
   }
 
   /**
-   * 让`transactional`使用default数据源里的JDBC连接(及对应的事物管理器),并关闭只读属性（即可执行更新操作）。
-   * 与在Spring里给方法添加注解`@Transactional(readOnly=true, transactionManager="default")`一致
+   * 让 ` transactional ` 使用default数据源里的JDBC连接(及对应的事物管理器),并关闭只读属性（即可执行更新操作）。
+   * 与在Spring里给方法添加注解 ` @Transactional(readOnly=true, transactionManager="default") ` 一致
    */
   def save(company: Company): Unit = transactional(readOnly = false, resource = "default") { implicit connection =>
     // execute sql update statements here ...
