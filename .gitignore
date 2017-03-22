@@ -15,3 +15,14 @@ project/plugins/project/
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+compiler.xml
+libraries
+misc.xml
+modules
+modules.xml
+play2_project_settings.xml
+sbt.xml
+scala_compiler.xml
+uiDesigner.xml
+vcs.xml
+workspace.xml
