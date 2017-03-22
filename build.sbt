@@ -5,15 +5,13 @@ scalaVersion := "2.11.8"
 
 compileOrder := CompileOrder.JavaThenScala
 
-//resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 lazy val root = (project in file(".")).enablePlugins(/*Playdoc,*/ PlayLibrary)
-libraryDependencies += jdbc
-libraryDependencies += evolutions
-libraryDependencies += "com.adrianhurt" %% "play-bootstrap" % "1.0-P25-B3"
-libraryDependencies += "com.typesafe.play" %% "anorm" % "2.5.0"
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 libraryDependencies ++= Seq(
-  "aopalliance" % "aopalliance" % "1.0",
+  jdbc % Optional,
+  evolutions % Test,
+  "com.typesafe.play" %% "anorm" % "2.5.0" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+  "com.adrianhurt" %% "play-bootstrap" % "1.0-P25-B3" % Test,
   "mysql" % "mysql-connector-java" % "6.0.5" % Test
 )
 
@@ -22,10 +20,23 @@ pomExtra := (
   <license>
     <name>Apache 2</name>
     <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    <distribution>repo</distribution>
   </license>
-</licenses>)
+</licenses>
+<scm>
+  <connection>scm:git:github.com/{organization.value.substring(4)}/{name.value}.git</connection>
+  <developerConnection>scm:git:git@github.com:/{organization.value.substring(4)}/{name.value}.git</developerConnection>
+  <url>https://github.com/{organization.value.substring(4)}/{name.value}</url>
+</scm>
+<developers>
+  <developer>
+    <id>sauntor</id>
+    <name>适然(Sauntor)</name>
+    <url>https://github.com/sauntor</url>
+  </developer>
+</developers>)
+playBuildRepoName := name.value
+omnidocGithubRepo := s"${organization.value.substring(4)}/${name.value}"
+homepage := Some(url(s"https://github.com/${organization.value.substring(4)}/${name.value}"))
 
-playBuildRepoName := "play-dbx"
-omnidocGithubRepo := s"lingcreative/${playBuildRepoName}"
-homepage := Some(url(s"https://github.com/lingcreative/${playBuildRepoName}"))
+sonatypeProfileName := "sauntor"
+useGpg := true

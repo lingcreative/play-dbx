@@ -11,6 +11,12 @@ object Common extends AutoPlugin {
   override def trigger = allRequirements
   override def requires = JvmPlugin
 
+  object autoImport {
+    val organizationName = "lingcreative"
+    val organizationId = "com.lingcreative"
+  }
+
+  import autoImport._
   val previousVersion = "0.0.1"
 
   override def projectSettings = mimaDefaultSettings ++ Seq(
