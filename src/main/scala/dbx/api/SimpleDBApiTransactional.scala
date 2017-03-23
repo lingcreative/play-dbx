@@ -14,7 +14,7 @@ import play.api.db.DBApi
 class SimpleDBApiTransactional @Inject()(dbApi: DBApi, override val lookupTransactionManager: TransactionManagerLookup,
                                          override val settings: TransactionSettings) extends Transactional[Connection] {
 
-  override def obtainConnection(resource: String): Resource = {
+  override def obtainResource(resource: String): Resource = {
     DataSourceUtils.getConnection(dbApi.database(resource).dataSource)
   }
 

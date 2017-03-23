@@ -178,14 +178,14 @@ trait Transactional[R] {
     }
     attribute.getRollbackRules.addAll(rollBackRules)
     invokeWithinTransaction[T](transactionalOperation.getClass, attribute,
-      () => transactionalOperation(obtainConnection(resource)))
+      () => transactionalOperation(obtainResource(resource)))
   }
 
   /**
     * Get a transactional resource for current transaction execution, create a new one if it not exists
     * @return
     */
-  protected def obtainConnection(resource: String): Resource
+  protected def obtainResource(resource: String): Resource
 
   protected def invokeWithinTransaction[T](transactionalFunction: Class[_], txAttr: TransactionAttribute, invocation: () => T): T = {
     val tm = lookupTransactionManager(txAttr)
