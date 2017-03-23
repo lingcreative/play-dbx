@@ -16,12 +16,6 @@ libraryDependencies ++= Seq(
 )
 
 pomExtra := (
-<licenses>
-  <license>
-    <name>Apache 2</name>
-    <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-  </license>
-</licenses>
 <scm>
   <connection>scm:git:github.com/{organization.value.substring(4)}/{name.value}.git</connection>
   <developerConnection>scm:git:git@github.com:/{organization.value.substring(4)}/{name.value}.git</developerConnection>
