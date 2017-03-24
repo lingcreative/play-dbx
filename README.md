@@ -16,7 +16,8 @@ libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.1"
 
 class Module extends AbstractModule {
   override def configure(): Unit = {
-    //Use the out-of-boxed TransactionManagerLookup for DBApi, which create a individual DataSourceTransactionManager
+    //Use the out-of-boxed TransactionManagerLookup for DBApi, which create a
+    //individual DataSourceTransactionManager
     //for each DataSource looked up from `DBApi.database(name).datasource`
     bind(classOf[TransactionManagerLookup]).to(classOf[SimpleDBApiTransactionManagerLookup])
 
@@ -25,8 +26,8 @@ class Module extends AbstractModule {
     val transactionalKey = new TypeLiteral[Transactional[Connection]](){}
     bind(transactionalKey).to(classOf[SimpleDBApiTransactional])
 
-    //Make the db named `default1` configured in application.conf as the default datasource, and set JDBC isolation level
-    //to repeatable read
+    //Make the db named `default1` configured in application.conf as the default datasource,
+    //and set JDBC isolation level to repeatable read
     //Refer [[dbx.transaction.Transactional]]、[[dbx.transaction.Transactional.TransactionSettings]] for details.
     val settings = TransactionSettings(isolation = Isolation.REPEATABLE_READ, resource = "default1")
     bind(classOf[TransactionSettings]).toInstance(settings)
@@ -49,7 +50,9 @@ import dbx.api.Transactional
 case class Company(id: Option[Long] = None, name: String)
 
 @Singleton
-class CompanyService @Inject() (transactional: Transactional[Connection]/*Inject the SimpleDBApiTransactional for JDBC operations*/) {
+class CompanyService @Inject() (
+        /*Inject the SimpleDBApiTransactional for JDBC operations*/
+        transactional: Transactional[Connection]) {
 
   /**
    * Parse a Company from a ResultSet
@@ -62,7 +65,8 @@ class CompanyService @Inject() (transactional: Transactional[Connection]/*Inject
   }
 
   /**
-   * Get connection from `default1` db configured in application.conf, and rollback if any `Exception` thrown
+   * Get connection from `default1` db configured in application.conf,
+   * and rollback if any `Exception` thrown
    */
   def options: Seq[(String,String)] = transactional() { implicit connection =>
     SQL("select * from company order by name").as(simple *).
@@ -72,13 +76,19 @@ class CompanyService @Inject() (transactional: Transactional[Connection]/*Inject
   }
 
   /**
-   * Allow update and delete sql to execute, pick connection from `default`, and rollback if any `CompanyExistException`,
-   * it equals to `@Transactional(readOnly=true, transactionManager="default", rollbackFor={CompanyExistException.class})` in SpringFramework.
+   * Allow update and delete sql to execute, obtain connections from `default`,
+   * and rollback if any `CompanyExistException` thrown, it equals to 
+   * `@Transactional(readOnly=true, transactionManager="default", rollbackFor={CompanyExistException.class})`
+   * in SpringFramework.
    */
-  def save(company: Company): Unit = transactional(readOnly = false, resource = "default", rollbackFor = Array(classOf[CompanyExistException])) { implicit connection =>
+  def save(company: Company): Unit = transactional(readOnly = false, resource = "default",
+        rollbackFor = Array(classOf[CompanyExistException])) { implicit connection =>
     // execute sql update statements here ...
   }
 
 }
 
 ```
+
+
+**Enjoy it!**

@@ -1,4 +1,4 @@
-play-dbx中文说明
+play-dbx [English Version](README.md)
 ================
 play-dbx是一个事务管理框架/类库，源代码移植于SpringFramework，并去除无关类和依赖。核心接口为`Transactional`和`TransactionManagerLookup`(也是需要用户扩展定制的Trait)，并提供了DBApi的简单实现。
 
@@ -44,7 +44,8 @@ import dbx.api.Transactional
 case class Company(id: Option[Long] = None, name: String)
 
 @Singleton
-class CompanyService @Inject() (transactional: Transactional[Connection]/*注入Module.scala中配置的Transactional*/) {
+class CompanyService @Inject() (
+    transactional: Transactional[Connection]/*注入Module.scala中配置的Transactional*/) {
 
   /**
    * Parse a Company from a ResultSet
@@ -57,7 +58,8 @@ class CompanyService @Inject() (transactional: Transactional[Connection]/*注入
   }
 
   /**
-   * 按照Module.scala中配置的属性执行事务操作, ` transactional ` 对象的使用方法与Spring的 ` @Transactional ` 注解一致
+   * 按照Module.scala中配置的属性执行事务操作, ` transactional ` 对象的使用方法与Spring的
+   * `@Transactional` 注解一致
    */
   def options: Seq[(String,String)] = transactional() { implicit connection =>
     SQL("select * from company order by name").as(simple *).
@@ -70,7 +72,8 @@ class CompanyService @Inject() (transactional: Transactional[Connection]/*注入
    * 让 ` transactional ` 使用default数据源里的JDBC连接(及对应的事物管理器),并关闭只读属性（即可执行更新操作）。
    * 与在Spring里给方法添加注解 ` @Transactional(readOnly=true, transactionManager="default") ` 一致
    */
-  def save(company: Company): Unit = transactional(readOnly = false, resource = "default") { implicit connection =>
+  def save(company: Company): Unit = transactional(readOnly = false, resource = "default") {
+  implicit connection =>
     // execute sql update statements here ...
   }
 
