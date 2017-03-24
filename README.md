@@ -91,4 +91,4 @@ class CompanyService @Inject() (
 ```
 
 
-**Enjoy it! :tea: **
+**Enjoy it!** :tea:
