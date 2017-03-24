@@ -4,7 +4,7 @@ play-dbx是一个事务管理框架/类库，源代码移植于SpringFramework�
 
 ## 项目设置（build.sbt）
 ```sbt
-libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.0"
+libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.1"
 ```
 ## 使用（以Anorm为例）
 

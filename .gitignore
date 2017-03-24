@@ -26,3 +26,10 @@ scala_compiler.xml
 uiDesigner.xml
 vcs.xml
 workspace.xml
+
+# ensime specific
+.ensime
+.ensime_cache
+project/.ensime
+project/.ensime_cache
+

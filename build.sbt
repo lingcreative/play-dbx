@@ -25,12 +25,15 @@ pomExtra := (
   <developer>
     <id>sauntor</id>
     <name>适然(Sauntor)</name>
+    <email>sauntor@yeah.net</email>
     <url>https://github.com/sauntor</url>
+    <organization>LingCreative</organization>
+    <organizationUrl>https://github.com/lingcreative</organizationUrl>
   </developer>
 </developers>)
 playBuildRepoName := name.value
 omnidocGithubRepo := s"${organization.value.substring(4)}/${name.value}"
 homepage := Some(url(s"https://github.com/${organization.value.substring(4)}/${name.value}"))
 
-sonatypeProfileName := "sauntor"
+sonatypeProfileName := organization.value
 useGpg := true
