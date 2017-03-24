@@ -1,4 +1,4 @@
-play-dbx [中文说明](README_zh.md)
+play-dbx [:point_right: 中文说明](README_zh.md)
 =================================
 A transaction management library that makes it simple while using transactional resources, e.g. play-jdbc, anorm, etc, in PlayFramework.
 The original source code is migrated from **Spring Framekwork** 's `spring-tx`, `spring-jdbc` and `spring-context` modules, and remove any unnessery classes. It's aim is to provide a clean and no external dependencies transaction management framework for `Play Framework`. It supports `Play DBApi` a.k. `play-jdbc` out of box, you can refer the instructions bellow.
@@ -91,4 +91,4 @@ class CompanyService @Inject() (
 ```
 
 
-**Enjoy it!**
+**Enjoy it! :tea: **
