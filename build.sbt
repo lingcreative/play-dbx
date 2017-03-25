@@ -1,6 +1,6 @@
 name := "play-dbx"
 organization := "com.lingcreative"
-version := "1.0.1"
+version := "1.0.2"
 scalaVersion := "2.11.8"
 
 compileOrder := CompileOrder.JavaThenScala
@@ -9,6 +9,9 @@ lazy val root = (project in file(".")).enablePlugins(/*Playdoc,*/ PlayLibrary)
 libraryDependencies ++= Seq(
   jdbc % Optional,
   evolutions % Test,
+  "org.codehaus.btm" % "btm" % "2.1.3" % Optional,
+  "javax.transaction" % "jta" % "1.1" % Optional,
+  "org.apache.geronimo.specs" % "geronimo-jms_1.1_spec" % "1.1.1" % Optional,
   "com.typesafe.play" %% "anorm" % "2.5.0" % Test,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
   "com.adrianhurt" %% "play-bootstrap" % "1.0-P25-B3" % Test,
@@ -30,7 +33,9 @@ pomExtra := (
     <organization>LingCreative</organization>
     <organizationUrl>https://github.com/lingcreative</organizationUrl>
   </developer>
-</developers>)
+</developers>
+)
+
 playBuildRepoName := name.value
 omnidocGithubRepo := s"${organization.value.substring(4)}/${name.value}"
 homepage := Some(url(s"https://github.com/${organization.value.substring(4)}/${name.value}"))

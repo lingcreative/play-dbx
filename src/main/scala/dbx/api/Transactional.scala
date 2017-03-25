@@ -1,13 +1,12 @@
 package dbx.api
 
-import javax.annotation.PostConstruct
-
 import dbx.api.Isolation.Isolation
 import dbx.api.Propagation.Propagation
 import dbx.core.NamedThreadLocal
 import dbx.transaction.interceptor._
 import dbx.transaction.support.{CallbackPreferringPlatformTransactionManager, TransactionCallback}
 import dbx.transaction.{NoTransactionException, PlatformTransactionManager, TransactionStatus, TransactionSystemException}
+import dbx.util.{ConcurrentReferenceHashMap, StringUtils}
 
 /**
   * Base class for transactional functions, such as the [[SimpleDBApiTransactional]].
@@ -146,14 +145,6 @@ trait Transactional[R] {
 
   val lookupTransactionManager: TransactionManagerLookup
   val settings: TransactionSettings
-
-  /**
-    * Check that required properties were set.
-    */
-  @PostConstruct
-  def initialize() {
-    if (lookupTransactionManager == null) throw new IllegalStateException("Set the 'transactionManagerLookup' property or make sure to run within a BeanFactory " + "containing a PlatformTransactionManager bean!")
-  }
 
   def apply[T](readOnly: Boolean = settings.readOnly, isolation: Isolation = settings.isolation,
                propagation: Propagation = settings.propagation, timeout: Int = settings.timeout,
@@ -376,4 +367,33 @@ trait Transactional[R] {
   }
 
 
+}
+
+/**
+  * Determine the specific transaction manager to use for the given transaction.
+  */
+trait TransactionManagerLookup {
+  import TransactionManagerLookup._
+
+  def apply(attribute: TransactionAttribute): PlatformTransactionManager = {
+    val qualifier = attribute.getQualifier
+    val key = if (StringUtils.hasText(qualifier)) qualifier else DEFAULT_TRANSACTION_MANAGER_KEY
+    var transactionManager = transactionManagerCache.get(key)
+    if (transactionManager == null) {
+      transactionManager = lookup(qualifier)
+      transactionManagerCache.putIfAbsent(key, transactionManager)
+    }
+    transactionManager
+  }
+
+  protected def lookup(qualifier: String): PlatformTransactionManager
+}
+
+object TransactionManagerLookup {
+  /**
+    * Key to use to store the default transaction manager.
+    */
+  private val DEFAULT_TRANSACTION_MANAGER_KEY = new AnyRef
+
+  private val transactionManagerCache = new ConcurrentReferenceHashMap[AnyRef, PlatformTransactionManager](4)
 }
