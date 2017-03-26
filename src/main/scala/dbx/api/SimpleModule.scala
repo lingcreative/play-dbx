@@ -41,6 +41,9 @@ class SimpleDBApiTransactional @Inject()(dbApi: DBApi, override val lookupTransa
     DataSourceUtils.getConnection(dbApi.database(resource).dataSource)
   }
 
+  override protected def releaseResource(resource: String, actualResource: Resource): Unit = {
+    DataSourceUtils.releaseConnection(actualResource, dbApi.database(resource).dataSource)
+  }
 }
 
 /**
@@ -58,7 +61,7 @@ class SimpleDBApiTransactionManagerLookup @Inject()(dbApi: DBApi) extends Transa
     if (manager.isEmpty) {
       synchronized {
         manager = Some(new DataSourceTransactionManager(dbApi.database(resource).dataSource))
-        managers = managers + ((resource, manager.get))
+        managers = managers + (resource -> manager.get)
       }
     }
     manager.get

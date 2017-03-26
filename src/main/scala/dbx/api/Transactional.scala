@@ -168,8 +168,15 @@ trait Transactional[R] {
       rollBackRules.add(rule)
     }
     attribute.getRollbackRules.addAll(rollBackRules)
-    invokeWithinTransaction[T](transactionalOperation.getClass, attribute,
-      () => transactionalOperation(obtainResource(resource)))
+
+    invokeWithinTransaction[T](transactionalOperation.getClass, attribute) { () =>
+      val actualResource = obtainResource(resource)
+      try {
+        transactionalOperation(actualResource)
+      } finally {
+        releaseResource(resource, actualResource)
+      }
+    }
   }
 
   /**
@@ -178,7 +185,14 @@ trait Transactional[R] {
     */
   protected def obtainResource(resource: String): Resource
 
-  protected def invokeWithinTransaction[T](transactionalFunction: Class[_], txAttr: TransactionAttribute, invocation: () => T): T = {
+  /**
+    * Release the transaction resource after current transaction complete
+    * @param resource the name of the resource
+    * @param actualResource the actual transactional resource object obtained by: {{{obtainResource(resource:String):Resource}}}
+    */
+  protected def releaseResource(resource: String, actualResource: Resource): Unit
+
+  protected def invokeWithinTransaction[T](transactionalFunction: Class[_], txAttr: TransactionAttribute)(invocation: () => T): T = {
     val tm = lookupTransactionManager(txAttr)
     val joinpointIdentification: String = transactionalFunction.getName
     if (txAttr == null || !tm.isInstanceOf[CallbackPreferringPlatformTransactionManager]) {
