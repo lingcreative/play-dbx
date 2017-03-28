@@ -12,8 +12,7 @@ object Common extends AutoPlugin {
   override def requires = JvmPlugin
 
   object autoImport {
-    val organizationName = "lingcreative"
-    val organizationId = "com.lingcreative"
+    val organizationPlanName = "lingcreative"
   }
 
   import autoImport._
