@@ -1,5 +1,5 @@
 name := "play-dbx"
-version := "1.0.2"
+version := "1.0.3"
 scalaVersion := "2.11.8"
 organization := "com.lingcreative"
 organizationName := "LingCreative Studio"
@@ -31,3 +31,5 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
   "com.typesafe.play" %% "anorm" % "2.5.3" % Test
 )
+
+filterScalaLibrary := false
