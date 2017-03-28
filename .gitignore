@@ -33,3 +33,8 @@ workspace.xml
 project/.ensime
 project/.ensime_cache
 
+# IDEA
+.idea
+*.iml
+*.pr
+
