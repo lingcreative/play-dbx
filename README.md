@@ -2,11 +2,11 @@ play-dbx [:point_right: 中文说明](README_zh.md)
 =================================
 A transaction management library that makes it simple while using transactional resources, e.g. play-jdbc, anorm, etc, in PlayFramework.
 The original source code is migrated from **Spring Framekwork** 's `spring-tx`, `spring-jdbc` and `spring-context` modules, and remove any unnessery classes. It's aim is to provide a clean and no external dependencies transaction management framework for `Play Framework`. It supports `Play DBApi` a.k. `play-jdbc` out of box, you can refer the instructions bellow.
-The core component/interface of `play-dbx` is `Transactional`, `TransactionSettings` and `TransactionManagerLookup`, and the default implementation of `Transactional` is `SimpleDBApiTransactional` and `SimpleDBApiTransactionManagerLookup` for `TransactionManagerLookup`, pelease refere the source code for more details.
+The core component/interface of `play-dbx` is `Transactional`, `TransactionSettings` and `TransactionManagerLookup`, and the default implementation of `Transactional` is `SimpleDBApiTransactional` and `SimpleDBApiTransactionManagerLookup` for `TransactionManagerLookup`, pelease refere the source code for more details. It only supports **Scala 2.11** currently.
 
 ## Add dependency to you project（build.sbt）
 ```sbt
-libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.1"
+libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.2"
 ```
 ## Steps(take `Anorm` for example)
 
