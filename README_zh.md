@@ -1,6 +1,6 @@
 play-dbx [:point_right: for English](README.md)
 ================
-play-dbx是一个事务管理框架/类库，源代码移植于SpringFramework，并去除无关类和依赖。核心接口为`Transactional`和`TransactionManagerLookup`(也是需要用户扩展定制的Trait)，并提供了DBApi的简单实现。目前仅提供Scala 2.11版本支持。
+play-dbx是一个事务管理框架/类库，源代码移植于SpringFramework，并去除无关类和依赖。核心接口为`Transactional`和`TransactionManagerLookup`(也是需要用户扩展定制的Trait)，并提供了DBApi的简单实现。目前仅提供对 __Scala 2.11 且 Play 2.5+__ 版本支持。
 
 ## 项目设置（build.sbt）
 ```sbt
