@@ -8,7 +8,7 @@ libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.3"
 ```
 ## 使用（以Anorm为例）
 
-### 依赖注入
+#### 依赖注入
 ```scala
 //app/Module.scala
 
@@ -29,8 +29,23 @@ class Module extends AbstractModule {
 }
 
 ```
+或者
+```
+// in application.conf
+play {
+    modules {
+        enabled += dbx.api.SimpleModule
+    }
+}
+dbx {
+    transactionSettings {
+        resource = default1
+        isolationLevel = REPEATABLE_READ
+    }
+}
+```
 
-### 代码使用(这段代码修改自[play-anorm](https://github.com/playframework/play-scala-anorm-example))
+#### 代码使用(这段代码修改自[play-anorm](https://github.com/playframework/play-scala-anorm-example))
 ```scala
 import java.sql.Connection
 import javax.inject._
@@ -80,3 +95,9 @@ class CompanyService @Inject() (
 }
 
 ```
+
+## JTA支持（BTM）
+参考[BTM配置](doc/BitronixTransactionManager_zh.md)
+
+
+**Enjoy it!** :tea:

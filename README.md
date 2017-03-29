@@ -36,6 +36,22 @@ class Module extends AbstractModule {
 
 ```
 
+Or
+```
+// in application.conf
+play {
+    modules {
+        enabled += dbx.api.SimpleModule
+    }
+}
+dbx {
+    transactionSettings {
+        resource = default1
+        isolationLevel = REPEATABLE_READ
+    }
+}
+```
+
 #### Make code transactional(modified from [play-anorm](https://github.com/playframework/play-scala-anorm-example))
 ```scala
 import java.sql.Connection
@@ -82,13 +98,16 @@ class CompanyService @Inject() (
    * in SpringFramework.
    */
   def save(company: Company): Unit = transactional(readOnly = false, resource = "default",
-        rollbackFor = Array(classOf[CompanyExistException])) { implicit connection =>
+        rollbackFor = Seq(classOf[CompanyExistException])) { implicit connection =>
     // execute sql update statements here ...
   }
 
 }
 
 ```
+
+## JTA support via BTM
+See [BitronixTransactionManager Configuration](doc/BitronixTransactionManager.md)
 
 
 **Enjoy it!** :tea:

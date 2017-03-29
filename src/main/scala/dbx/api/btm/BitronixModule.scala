@@ -20,7 +20,7 @@ import play.api.db.DBApi
 /**
   * A standard `Play` module to provide basic setup for BitronixTransactionManager
   */
-class BitronixModule extends AbstractModule {
+class BitronixDBApiModule extends AbstractModule {
 
   override def configure() = {
     bind(classOf[BitronixTransactionManager]).toProvider(classOf[BitronixTransactionManagerProvider])
