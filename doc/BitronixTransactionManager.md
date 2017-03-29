@@ -14,7 +14,7 @@ play {
             hikaricp {
         
               # The datasource class name must be set to BtmDataSource, as for driverProperties configuring problem caused by hikaricp
-              dataSourceClassName = "dbx.btm.api.BtmDataSource"
+              dataSourceClassName = "dbx.api.btm.BtmDataSource"
         
               # Data source configuration options, i.e, the properties need to configure on PoolingDataSource _in BTM_
               dataSource {

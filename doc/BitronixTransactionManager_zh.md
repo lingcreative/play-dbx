@@ -14,7 +14,7 @@ play {
             hikaricp {
         
               # 让hikaricp使用BtmDataSource作为DataSource的实现, 因为PoolingDataSource的driverProperties无法在hikaricp里正确配置
-              dataSourceClassName = "dbx.btm.api.BtmDataSource"
+              dataSourceClassName = "dbx.api.btm.BtmDataSource"
         
               # 数据源属性，即BTM中的PoolingDataSource的属性配置
               dataSource {
