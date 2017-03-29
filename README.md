@@ -6,7 +6,7 @@ The core component/interface of `play-dbx` is `Transactional`, `TransactionSetti
 
 ## Add dependency to you project（build.sbt）
 ```sbt
-libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.3"
+libraryDependencies += "com.lingcreative" %% "play-dbx" % "1.0.4"
 ```
 ## Steps(take `Anorm` for example)
 
