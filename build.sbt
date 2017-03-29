@@ -1,5 +1,5 @@
 name := "play-dbx"
-version := "1.0.3"
+version := "1.0.4-SNAPSHOT"
 scalaVersion := "2.11.8"
 organization := "com.lingcreative"
 organizationName := "LingCreative Studio"

@@ -134,8 +134,20 @@ object Transactional {
 
   case class TransactionSettings(readOnly: Boolean = defaultSettings.readOnly, isolation: Isolation = defaultSettings.isolation,
                                  propagation: Propagation = defaultSettings.propagation, timeout: Int = defaultSettings.timeout,
-                                 noRollbackFor: Array[Class[_]] = defaultSettings.noRollbackFor,
-                                 rollbackFor: Array[Class[_]] = defaultSettings.rollbackFor, resource: String = defaultSettings.resource)
+                                 noRollbackFor: Seq[Class[_]] = defaultSettings.noRollbackFor,
+                                 rollbackFor: Seq[Class[_]] = defaultSettings.rollbackFor, resource: String = defaultSettings.resource)
+  case class TransactionSettingsBuilder() {
+    var readOnly: Boolean = defaultSettings.readOnly
+    var isolation: Isolation = defaultSettings.isolation
+    var propagation: Propagation = defaultSettings.propagation
+    var timeout: Int = defaultSettings.timeout
+    var noRollbackFor: Seq[Class[_]] = defaultSettings.noRollbackFor
+    var rollbackFor: Seq[Class[_]] = defaultSettings.rollbackFor
+    var resource: String = defaultSettings.resource
+    def build() = {
+      TransactionSettings(readOnly, isolation, propagation, timeout, noRollbackFor, rollbackFor, resource)
+    }
+  }
 }
 
 trait Transactional[R] {
@@ -148,8 +160,8 @@ trait Transactional[R] {
 
   def apply[T](readOnly: Boolean = settings.readOnly, isolation: Isolation = settings.isolation,
                propagation: Propagation = settings.propagation, timeout: Int = settings.timeout,
-               noRollbackFor: Array[Class[_]] = settings.noRollbackFor,
-               rollbackFor: Array[Class[_]] = settings.rollbackFor, resource: String = settings.resource
+               noRollbackFor: Seq[Class[_]] = settings.noRollbackFor,
+               rollbackFor: Seq[Class[_]] = settings.rollbackFor, resource: String = settings.resource
               )(transactionalOperation: Resource => T): T = {
 
     val attribute = new RuleBasedTransactionAttribute

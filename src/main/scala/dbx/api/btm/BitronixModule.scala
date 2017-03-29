@@ -1,4 +1,4 @@
-package dbx.btm.api
+package dbx.api.btm
 
 import java.io.{FileInputStream, IOException, InputStream}
 import java.net.URL
@@ -11,9 +11,10 @@ import bitronix.tm.resource.jdbc.PoolingDataSource
 import bitronix.tm.{BitronixTransactionManager, TransactionManagerServices}
 import com.google.inject.{AbstractModule, Provider, TypeLiteral}
 import dbx.api.Transactional.TransactionSettings
-import dbx.api.{SimpleDBApiTransactional, TransactionManagerLookup, Transactional}
+import dbx.api.{SimpleDBApiTransactional, TransactionManagerLookup, TransactionSettingsProvider, Transactional}
 import dbx.transaction.PlatformTransactionManager
 import dbx.transaction.jta.JtaTransactionManager
+import play.api.{Configuration, Environment}
 import play.api.db.DBApi
 
 /**
@@ -26,16 +27,25 @@ class BitronixModule extends AbstractModule {
     val transactionalKey = new TypeLiteral[Transactional[Connection]](){}
     bind(transactionalKey).to(classOf[SimpleDBApiTransactional])
     bind(classOf[TransactionManagerLookup]).to(classOf[BtmTransactionManagerLookup])
+    val confProvider = binder().getProvider(classOf[Configuration])
+    val envProvider = binder().getProvider(classOf[Environment])
+    bind(classOf[TransactionSettings]).toProvider(new TransactionSettingsProvider(){
+      override def config = confProvider.get()
+      override def env = envProvider.get()
+    })
   }
 }
 
 trait BitronixComponents {
-  def btm: BitronixTransactionManager
+  def environment: Environment
+  def configuration: Configuration
   def dbApi: DBApi
-  def settings: TransactionSettings
 
+  lazy val btm: BitronixTransactionManager = TransactionManagerServices.getTransactionManager
   lazy val transactionManager: BtmTransactionManagerLookup = new BtmTransactionManagerLookup(btm)
-  lazy val transactional: Transactional[Connection] = new SimpleDBApiTransactional(dbApi, transactionManager, settings)
+  lazy val transactionSettings: TransactionSettings = new TransactionSettingsProvider(){
+                    override def config = configuration; override def env = environment }.get()
+  lazy val transactional: Transactional[Connection] = new SimpleDBApiTransactional(dbApi, transactionManager, transactionSettings)
 }
 
 @Singleton

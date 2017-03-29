@@ -16,8 +16,8 @@ package object api {
     val isolation: Isolation = Isolation.DEFAULT
     val propagation: Propagation = Propagation.REQUIRED
     val timeout: Int = 6000
-    val noRollbackFor: Array[Class[_]] = Array()
-    val rollbackFor: Array[Class[_]] = Array(classOf[Exception])
+    val noRollbackFor: Seq[Class[_]] = Seq()
+    val rollbackFor: Seq[Class[_]] = Seq(classOf[Exception])
     val resource: String = "default"
   }
 

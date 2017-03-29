@@ -3,10 +3,12 @@ package dbx.api
 import java.sql.Connection
 import javax.inject.{Inject, Singleton}
 
-import com.google.inject.{AbstractModule, TypeLiteral}
-import dbx.api.Transactional.TransactionSettings
+import com.google.inject.{AbstractModule, Provider, TypeLiteral}
+import dbx.api.Transactional.{TransactionSettings, TransactionSettingsBuilder}
 import dbx.jdbc.{DataSourceTransactionManager, DataSourceUtils}
 import dbx.transaction.PlatformTransactionManager
+import play.api.Configuration
+import play.api.Environment
 import play.api.db.DBApi
 
 /**
@@ -17,14 +19,46 @@ class SimpleModule extends AbstractModule {
     val transactionalKey = new TypeLiteral[Transactional[Connection]](){}
     bind(transactionalKey).to(classOf[SimpleDBApiTransactional])
     bind(classOf[TransactionManagerLookup]).to(classOf[SimpleDBApiTransactionManagerLookup])
+    val confProvider = binder().getProvider(classOf[Configuration])
+    val envProvider = binder().getProvider(classOf[Environment])
+    bind(classOf[TransactionSettings]).toProvider(new TransactionSettingsProvider(){
+      override def config = confProvider.get()
+      override def env = envProvider.get()
+    })
+  }
+}
+
+trait TransactionSettingsProvider extends Provider[TransactionSettings] {
+  def config: Configuration
+  def env: Environment
+  override def get(): TransactionSettings = {
+    config.getConfig("dbx.transactionSettings") match {
+      case Some(settings) =>
+        val builder = TransactionSettingsBuilder()
+        settings.getString("resource").foreach(builder.resource = _)
+        settings.getBoolean("readOnly").foreach(builder.readOnly = _)
+        settings.getString("isolation").foreach{ s => builder.isolation = Isolation.withName(s) }
+        settings.getString("propagation").foreach{ s => builder.propagation = Propagation.withName(s) }
+        settings.getInt("timeout").foreach(builder.timeout = _)
+        val cl = env.classLoader
+        settings.getStringSeq("rollbackFor").foreach { seq => builder.rollbackFor = seq.map(cl.loadClass(_)) }
+        settings.getStringSeq("noRollbackFor").foreach { seq => builder.noRollbackFor = seq.map(cl.loadClass(_)) }
+        builder.build()
+      case None => throw config.reportError("dbx.transactionSettings", "Can't load transactionSettings")
+    }
   }
 }
 
 trait SimpleComponents {
+  def environment: Environment
+  def configuration: Configuration
   def dbApi: DBApi
-  def transactionSettings: TransactionSettings
-  def transactionManager: TransactionManagerLookup
 
+  lazy val transactionManager: TransactionManagerLookup = new SimpleDBApiTransactionManagerLookup(dbApi)
+  lazy val transactionSettings: TransactionSettings = new TransactionSettingsProvider(){
+      override def config = configuration
+      override def env = environment
+    }.get()
   lazy val transactional: Transactional[Connection] = new SimpleDBApiTransactional(dbApi, transactionManager, transactionSettings)
 }
 

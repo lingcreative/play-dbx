@@ -4,8 +4,8 @@ import java.util.Properties
 import javax.inject.Singleton
 import javax.sql.DataSource
 
-import _root_.dbx.btm.api.BtmDataSource
 import com.typesafe.config.Config
+import dbx.api.btm.BtmDataSource
 import play.api._
 import play.api.inject.Module
 import play.api.libs.JNDI
@@ -14,7 +14,7 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.util.{Failure, Success, Try}
 
 /**
-  * HikariCP runtime inject module.
+  * BtmConnectionPool runtime inject module.
   */
 class BtmPoolModule extends Module {
   def bindings(environment: Environment, configuration: Configuration) = {
@@ -25,7 +25,7 @@ class BtmPoolModule extends Module {
 }
 
 /**
-  * HikariCP components (for compile-time injection).
+  * BtmConnectionPool components (for compile-time injection).
   */
 trait BtmPoolComponents {
   def environment: Environment
@@ -87,7 +87,7 @@ class BtmConnectionPool() extends ConnectionPool {
 }
 
 /**
-  * HikariCP config
+  * BtmConnectionPool config
   */
 object BtmConnectionPool {
   private val logger = Logger(classOf[BtmConnectionPool])
