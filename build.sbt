@@ -32,4 +32,4 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "anorm" % "2.5.3" % Test
 )
 
-filterScalaLibrary := false
+//filterScalaLibrary := false
