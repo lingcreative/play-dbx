@@ -70,6 +70,13 @@ class BtmTransactionManagerLookup @Inject()(private val btm: BitronixTransaction
 
 object BtmDataSource {
   private val CLASSPATH_PREFIX = "classpath://"
+  private val WIN = "(Windows|Win32).*".r
+  private def isMSWindows = {
+    sys.props("os.name") match {
+      case WIN(_) => true
+      case _ => false
+    }
+  }
 }
 
 class BtmDataSource extends PoolingDataSource {
@@ -88,7 +95,7 @@ class BtmDataSource extends PoolingDataSource {
         var cl = Thread.currentThread().getContextClassLoader
         cl = if (cl == null) classOf[BtmDataSource].getClassLoader else cl
         res = cl.getResourceAsStream(path.substring(CLASSPATH_PREFIX.length))
-      } else if (sys.props("os.name") == "Windows" && path.indexOf(':') == 1 || path.indexOf(':') == -1) {
+      } else if (isMSWindows && path.indexOf(':') == 1 || path.indexOf(':') == -1) {
           res = new FileInputStream(path)
       } else {
         res = new URL(path).openStream()
